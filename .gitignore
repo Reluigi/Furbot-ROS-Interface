@@ -1,9 +1,0 @@
-#ROS stuff
-
-furbot_ws/build/
-furbot_ws/devel/
-furbot_ws/logs/
-furbot_ws/.catkin_tools/
-
-#IDE stuff
-furbot_ws/.idea/
