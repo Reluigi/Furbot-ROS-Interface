@@ -1,3 +1,0 @@
-#furbot_details
-ciao 4
-hi 3
