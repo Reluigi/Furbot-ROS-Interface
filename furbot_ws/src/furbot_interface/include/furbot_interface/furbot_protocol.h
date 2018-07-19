@@ -9,10 +9,10 @@
 #define STATUS_FRAME_BUFFER_SIZE 256
 
 // First 4 bytes of status frame
-int STATUS_MAGIC_WORD[4] = {0x41, 0x54, 0x53, 0x46};
+char STATUS_MAGIC_WORD[4] = {0x41, 0x54, 0x53, 0x46};
 
 // First 4 bytes of remote frame
-int REMOTE_MAGIC_WORD[4] = {0x46, 0x53, 0x54, 0x41};
+char REMOTE_MAGIC_WORD[4] = {0x46, 0x53, 0x54, 0x41};
 
 // ID of the system in UDP Status Frame
 enum class SystemID : unsigned
@@ -29,6 +29,18 @@ enum class SystemID : unsigned
     SUSP_FR = 9,
     REAR_FORK = 10,
     FRONT_FORK = 11
+};
+
+enum class SystemMsgsLen : unsigned
+{
+    COMM = 1, // no description
+    BMS = 8,
+    MOTION_CONTROL = 7,
+    TRACTION = 17,
+    SREERING = 5,
+    HYDRAULICS = 8,
+    SUSPENSION = 7,
+    FORK = 11
 };
 
 // System state
