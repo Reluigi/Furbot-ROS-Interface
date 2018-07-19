@@ -104,4 +104,28 @@ enum class ForkSensor : unsigned
     TIPB = 13
 };
 
+// TODO: define structures for different system's statuses
+
+// TODO: define structure to combine all system statuses
+
+int ParseCommStatus(char * comm_msg){}
+
+/**
+ * Battery Management System (BMS) status parser.
+ *
+ * @param [in] bms_msg Pointer to BMS part of status frame.
+ * @param [in] bms_struct Pointer to structure, which should be filled with status values.
+*/
+int ParseBmsStatus(char * bms_msg, void * bms_struct){}
+
+/**
+ * Motion Control (MC) status parser.
+ * @param [in] mc_msg Pointer to MC part of status frame.
+ * @param [in] mc_struct Pointer to structure, which should be filled with status values.
+ */
+int ParseMcStatus(char * mc_msg, void * mc_struct){}
+
+// parse for each system ID
+int ParseStatusFrame(char * frame, size_t frame_size){}
+
 #endif //FURBOT_PROTOCOL_H
