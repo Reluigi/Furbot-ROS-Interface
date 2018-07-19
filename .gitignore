@@ -7,3 +7,4 @@ furbot_ws/.catkin_tools/
 
 #IDE stuff
 furbot_ws/.idea/
+cmake-build-debug/
