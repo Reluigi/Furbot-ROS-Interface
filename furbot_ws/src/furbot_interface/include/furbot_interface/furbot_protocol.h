@@ -1,20 +1,28 @@
-//
-// Created by rr on 16/07/18.
-//
+/**
+ * Furbot protocol parsing tools.
+ */
 
 #ifndef FURBOT_PROTOCOL_H
 #define FURBOT_PROTOCOL_H
 
-// Max possible bytes in status frame
+/**
+ * Max possible bytes in status frame
+ */
 #define STATUS_FRAME_BUFFER_SIZE 256
 
-// First 4 bytes of status frame
+/**
+ * First 4 bytes of status frame.
+ */
 char STATUS_MAGIC_WORD[4] = {0x41, 0x54, 0x53, 0x46};
 
-// First 4 bytes of remote frame
+/**
+ * First 4 bytes of remote frame.
+ */
 char REMOTE_MAGIC_WORD[4] = {0x46, 0x53, 0x54, 0x41};
 
-// ID of the system in UDP Status Frame
+/**
+ * IDs of the system in UDP Status Frame.
+ */
 enum class SystemID : unsigned
 {
     COMM = 0,
@@ -31,6 +39,9 @@ enum class SystemID : unsigned
     FRONT_FORK = 11
 };
 
+/**
+ * Lengths of different systems' messages.
+ */
 enum class SystemMsgsLen : unsigned
 {
     COMM = 1, // no description
@@ -43,7 +54,9 @@ enum class SystemMsgsLen : unsigned
     FORK = 11
 };
 
-// System state
+/**
+ * System states.
+ */
 enum class SystemState : unsigned
 {
     COLD = 0,
@@ -52,7 +65,9 @@ enum class SystemState : unsigned
     HALTED = 3
 };
 
-// Hydraulics drive state
+/**
+ * Hydraulics drive states.
+ */
 enum class HydrState : unsigned
 {
     NO_OP = 0,
@@ -67,7 +82,9 @@ enum class HydrState : unsigned
     FAULT = 9
 };
 
-// Suspension axis state
+/*
+ * Suspension States.
+ */
 enum class SuspState : unsigned
 {
     INIT = 0,
@@ -76,7 +93,9 @@ enum class SuspState : unsigned
     LOWERING = 3
 };
 
-// Fork axis state
+/**
+ * Fork States.
+ */
 enum class ForkState : unsigned
 {
     UNKNOWN = 0,
@@ -85,7 +104,9 @@ enum class ForkState : unsigned
     RETRACTING = 3
 };
 
-// Fork sensor ???
+/**
+ * States of Fork Sensor.
+ */
 enum class ForkSensor : unsigned
 {
     FWD = 0,
@@ -104,28 +125,86 @@ enum class ForkSensor : unsigned
     TIPB = 13
 };
 
-// TODO: define structures for different system's statuses
+/**
+ * @struct TractionStruct
+ * @brief Structure to keep Traction Data. See protocol description.
+ */
+struct TractionStruct {
+    char state;
+    char mode;
+    int speed;
+    int vel_l;
+    int vel_r;
+    int throttle;
+    int brake;
+    char reverse_flag;
+    int odo_travel;
+};
 
-// TODO: define structure to combine all system statuses
+/**
+ * @struct SteeringStruct
+ * @brief Structure to keep Steering Data. See protocol description.
+ */
+struct SteeringStruct {
+    char state;
+    int current_angle;
+    int target_angle;
+};
 
-int ParseCommStatus(char * comm_msg){}
+/**
+ * @struct StatusStruct
+ * @brief Structure to combine all systems' data.
+ */
+struct StatusStruct {
+    TractionStruct * traction_part;
+    SteeringStruct * steering_part;
+};
 
 /**
  * Battery Management System (BMS) status parser.
  *
  * @param [in] bms_msg Pointer to BMS part of status frame.
  * @param [in] bms_struct Pointer to structure, which should be filled with status values.
-*/
+ * @return [out] int value, 0 if there were no errors, 1 in other case.
+ */
 int ParseBmsStatus(char * bms_msg, void * bms_struct){}
 
 /**
- * Motion Control (MC) status parser.
- * @param [in] mc_msg Pointer to MC part of status frame.
- * @param [in] mc_struct Pointer to structure, which should be filled with status values.
+ * Motion Control (MC) data status parser.
+ *
+ * @param mc_msg Pointer to MC part of status frame.
+ * @param mc_struct Pointer to structure, which should be filled with status values.
+ * @return int value, 0 if there were no errors, 1 in other case.
  */
 int ParseMcStatus(char * mc_msg, void * mc_struct){}
 
-// parse for each system ID
+/**
+ * Traction Data (TD) status parser.
+ *
+ * @param td_msg Pointer to TD part of status frame.
+ * @param td_struct Pointer to structure, which should be filled with status values.
+ * @return int value, 0 if there were no errors, 1 in other case.
+ */
+int ParseTractStatus(char * td_msg, void * td_struct){}
+
+/**
+ * Steering Data (SD) status parser.
+ *
+ * @param sd_msg Pointer to SD part of status frame.
+ * @param sd_struct Pointer to structure, which should be filled with status values.
+ * @return int value, 0 if there were no errors, 1 in other case.
+ */
+int ParseSteerStatus(char * sd_msg, void * sd_struct){}
+
+// TODO: declare function for other systems statuses parsing.
+
+/**
+ * Parse income Status Frame. Check if it's valid using magic word, time stamp, and system count.
+ *
+ * @param frame Pointer to Status Frame char array.
+ * @param frame_size Size of the Status Frame.
+ * @return int value, 0 if there were no errors, 1 in other case.
+ */
 int ParseStatusFrame(char * frame, size_t frame_size){}
 
 #endif //FURBOT_PROTOCOL_H
