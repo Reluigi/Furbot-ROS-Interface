@@ -63,7 +63,7 @@ both directions <y:LabelModel><y:ErdAttributesNodeLabelModel/></y:LabelModel><y:
 achive desired speeds.
 
 Inputs: 
-desired speeds as twist msg, 
+desired speeds as Twist.msg, 
 telemetry to close the loop.
 
 Outputs:
