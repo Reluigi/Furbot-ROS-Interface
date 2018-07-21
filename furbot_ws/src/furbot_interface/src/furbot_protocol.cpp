@@ -32,23 +32,33 @@ int ParseTractStatus(char * td_msg, TractionStruct * td_struct){
                 position += 1;
                 continue;
             case 2:
-                std::memcpy((void *)td_struct->speed, (const void *)td_msg[position], 2);
+                int16_t speed;
+                std::memcpy((void *) &speed, (const void *) &td_msg[position], 2);
+                td_struct->speed = ntohs(speed);
                 position += 2;
                 continue;
             case 4:
-                std::memcpy((void *)td_struct->vel_l, (const void *)td_msg[position], 2);
+                int16_t vel_l;
+                std::memcpy((void *) &vel_l, (const void *) &td_msg[position], 2);
+                td_struct->vel_l = ntohs(vel_l);
                 position += 2;
                 continue;
             case 6:
-                std::memcpy((void *)td_struct->vel_r, (const void *)td_msg[position], 2);
+                int16_t vel_r;
+                std::memcpy((void *) &vel_r, (const void *) &td_msg[position], 2);
+                td_struct->vel_r = ntohs(vel_r);
                 position += 2;
                 continue;
             case 8:
-                std::memcpy((void *)td_struct->throttle, (const void *)td_msg[position], 2);
+                int16_t throttle;
+                std::memcpy((void *) &throttle, (const void *) &td_msg[position], 2);
+                td_struct->throttle = ntohs(throttle);
                 position += 2;
                 continue;
             case 10:
-                std::memcpy((void *)td_struct->brake, (const void *)td_msg[position], 2);
+                int16_t brake;
+                std::memcpy((void *) &brake, (const void *) &td_msg[position], 2);
+                td_struct->brake = ntohs(brake);
                 position += 2;
                 continue;
             case 12:
@@ -56,7 +66,9 @@ int ParseTractStatus(char * td_msg, TractionStruct * td_struct){
                 position += 1;
                 continue;
             case 13:
-                std::memcpy((void *)td_struct->odo_travel, (const void *)td_msg[position], 4);
+                int32_t odo_travel;
+                std::memcpy((void *) &odo_travel, (const void *) &td_msg[position], 4);
+                td_struct->odo_travel = ntohl(odo_travel);
                 position += 4;
                 continue;
             default:
