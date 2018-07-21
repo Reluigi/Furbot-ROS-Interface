@@ -20,7 +20,6 @@ int main(int argc, char **argv){
 
     int sock;
     struct sockaddr_in addr;
-    char buf[STATUS_FRAME_BUFFER_SIZE]; // In status frame form Furbot there might be at most 150 bytes of data.
     int bytes_read;
 
     sock = socket(AF_INET, SOCK_DGRAM, 0);
@@ -50,10 +49,11 @@ int main(int argc, char **argv){
     std::cout << "Start while loop\n";
     bool fail = false;
     while (not fail){
+        char buf[STATUS_FRAME_BUFFER_SIZE];
         bytes_read = recvfrom(sock, buf, STATUS_FRAME_BUFFER_SIZE, 0, NULL, NULL);
 //        buf[bytes_read] = '\0';
 //        std::cout << "Bytes read = " << bytes_read << ", message: " << buf << std::endl;
-        std::cout << "Going to parse status frame\n";
+        std::cout << "12th byte: " << (int)buf[12] << "\n";
         if (ParseStatusFrame(buf, bytes_read, &status)){
             continue;
         }

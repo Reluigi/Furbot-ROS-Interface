@@ -18,7 +18,7 @@
 /**
  * IDs of the system in UDP Status Frame.
  */
-enum class SystemID: int
+enum class SystemID: char
 {
     COMM = 0,
     BMS = 1,

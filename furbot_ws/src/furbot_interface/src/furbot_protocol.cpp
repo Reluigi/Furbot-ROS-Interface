@@ -21,7 +21,7 @@ char REMOTE_MAGIC_WORD[4] = {0x46, 0x53, 0x54, 0x41};
 int ParseTractStatus(char * td_msg, TractionStruct * td_struct){
     int position = 0;
     while ( position < static_cast<int>(SystemMsgsLen::TRACTION)){
-        std::cout << "ParseTractStatus while loop ... \n";
+        //std::cout << "ParseTractStatus while loop ... \n";
         // Parse td_msg bytes according to protocol bytes order
         switch (position){
             case 0 :
@@ -99,7 +99,6 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
     // go through frame parsing status for each system by it's ID and checking
     int position = 12;
     while ( position < frame_size){
-        std::cout << "ParseStatusFrame while loop ... \n";
         switch (frame[position]) {
             //case SystemID::COMM:
                 // TODO: process COMM part
@@ -107,9 +106,9 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
             //case SystemID::BMS:
                 // TODO: process BMS part
                 // continue;
-            case static_cast<int>(SystemID::TRACTION):
+            case static_cast<char>(SystemID::TRACTION):
                 // check length
-                if (frame[position+1] == static_cast<char>(SystemMsgsLen::TRACTION)){
+                if (frame[position+1] == static_cast<int>(SystemMsgsLen::TRACTION)){
                     // call parser
                     if (ParseTractStatus(&frame[position+2], status->traction_part)){
                         // Error - smth wrong
@@ -118,9 +117,9 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
                 // increase position by length of the field and by 2 for SID and LEN
                 position = position + (int)frame[position+1] + 2;
                 continue;
-            case static_cast<int>(SystemID::STEERING):
+            case static_cast<char>(SystemID::STEERING):
                 //check length
-                if (frame[position+1] == static_cast<char>(SystemMsgsLen::STEERING)){
+                if (frame[position+1] == static_cast<int>(SystemMsgsLen::STEERING)){
                     // call parser
                     if (ParseSteerStatus(&frame[position+2], status->steering_part)){
                         // Error - smth wrong
@@ -133,9 +132,11 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
                 // TODO: process other parts
                 // continue;
             default:
+                //std::cout << "ParseStatusFrame while loop: skip \n";
                 // use length to increase position
                 position = position + (int)frame[position+1] + 2;
                 continue;
         }
     }
+    return 0;
 }
