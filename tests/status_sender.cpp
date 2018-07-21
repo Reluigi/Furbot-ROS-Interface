@@ -92,6 +92,33 @@ int main()
         uint8_t bms_temp_l = 60;
         status.append((const char *) &bms_temp_l, sizeof(uint8_t));
 
+        // Traction data
+        char sid_td = 3;
+        status.append((const char *) &sid_td, sizeof(char));
+        char td_state = 2; // running
+        status.append((const char *) &td_state, sizeof(char));
+        char td_mode = 1;
+        status.append((const char *) &td_mode, sizeof(char));
+        int16_t td_speed = 24;
+        int16_t td_speed_net = htons(td_speed);
+        status.append((const char *) &td_speed_net, sizeof(int16_t));
+        int16_t td_vel_l = 4;
+        int16_t td_vel_l_net = htons(td_vel_l);
+        status.append((const char *) &td_vel_l_net, sizeof(int16_t));
+        int16_t td_vel_r = 4;
+        int16_t td_vel_r_net = htons(td_vel_r);
+        status.append((const char *) &td_vel_r_net, sizeof(int16_t));
+        int16_t td_throttle = 35;
+        int16_t td_throttle_net = htons(td_throttle);
+        status.append((const char *) &td_throttle_net, sizeof(int16_t));
+        int16_t td_brake = 0;
+        int16_t td_brake_net = htons(td_brake);
+        status.append((const char *) &td_brake_net, sizeof(int16_t));
+        char td_rev_flag = 0;
+        status.append((const char *) &td_rev_flag, sizeof(char));
+        int32_t td_odo = 0;
+        int32_t td_odo_net = htons(td_odo);
+        status.append((const char *) &td_odo_net, sizeof(int32_t));
 
 
         std::cout << "Resulting string: " << status << "; size = " << status.size() << "\n";
