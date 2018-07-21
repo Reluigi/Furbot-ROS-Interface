@@ -39,11 +39,20 @@ int main(int argc, char **argv){
         std::exit(1);
     }
 
+    // Initialize status structures
+    TractionStruct traction_status;
+    SteeringStruct steering_status;
+
+    StatusStruct status;
+    status.traction_part = &traction_status;
+    status.steering_part = &steering_status;
+
     bool fail = false;
     while (not fail){
         bytes_read = recvfrom(sock, buf, STATUS_FRAME_BUFFER_SIZE, 0, NULL, NULL);
         buf[bytes_read] = '\0';
         std::cout << "Bytes read = " << bytes_read << ", message: " << buf << std::endl;
+
     }
 
     return 0;
