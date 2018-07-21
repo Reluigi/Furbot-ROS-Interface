@@ -1,0 +1,10 @@
+Header header
+int8 state
+int8 mode
+int16 speed
+int16 vel_l
+int16 vel_r
+int16 throttle
+int16 brake
+int8 reverse_flag
+int32 odo_travel
