@@ -5,6 +5,8 @@
 #ifndef FURBOT_PROTOCOL_H
 #define FURBOT_PROTOCOL_H
 
+#include <cstring> // std::memcpy(dest, src, len);
+
 /**
  * Max possible bytes in status frame
  */
@@ -205,6 +207,6 @@ int ParseSteerStatus(char * sd_msg, void * sd_struct){}
  * @param frame_size Size of the Status Frame.
  * @return int value, 0 if there were no errors, 1 in other case.
  */
-int ParseStatusFrame(char * frame, size_t frame_size){}
+int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){}
 
 #endif //FURBOT_PROTOCOL_H
