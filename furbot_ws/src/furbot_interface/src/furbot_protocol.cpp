@@ -21,6 +21,7 @@ char REMOTE_MAGIC_WORD[4] = {0x46, 0x53, 0x54, 0x41};
 int ParseTractStatus(char * td_msg, TractionStruct * td_struct){
     int position = 0;
     while ( position < static_cast<int>(SystemMsgsLen::TRACTION)){
+        std::cout << "ParseTractStatus while loop ... \n";
         // Parse td_msg bytes according to protocol bytes order
         switch (position){
             case 0 :
@@ -98,6 +99,7 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
     // go through frame parsing status for each system by it's ID and checking
     int position = 12;
     while ( position < frame_size){
+        std::cout << "ParseStatusFrame while loop ... \n";
         switch (frame[position]) {
             //case SystemID::COMM:
                 // TODO: process COMM part

@@ -47,13 +47,22 @@ int main(int argc, char **argv){
     status.traction_part = &traction_status;
     status.steering_part = &steering_status;
 
+    std::cout << "Start while loop\n";
     bool fail = false;
     while (not fail){
         bytes_read = recvfrom(sock, buf, STATUS_FRAME_BUFFER_SIZE, 0, NULL, NULL);
-        buf[bytes_read] = '\0';
-        std::cout << "Bytes read = " << bytes_read << ", message: " << buf << std::endl;
-
+//        buf[bytes_read] = '\0';
+//        std::cout << "Bytes read = " << bytes_read << ", message: " << buf << std::endl;
+        std::cout << "Going to parse status frame\n";
+        if (ParseStatusFrame(buf, bytes_read, &status)){
+            continue;
+        }
+        else {
+            std::cout << "Speed: " << status.traction_part->speed << std::endl;
+        }
     }
+
+    close(sock);
 
     return 0;
 }

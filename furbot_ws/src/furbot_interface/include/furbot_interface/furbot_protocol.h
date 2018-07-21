@@ -8,6 +8,7 @@
 #include <cstring> // std::memcpy(dest, src, len);
 #include <cstdint> // fixed size integer types
 #include <netinet/in.h> // ntohs(), ntohl(), htons(), htonl()
+#include <iostream>
 
 /**
  * Max possible bytes in status frame
