@@ -9,6 +9,17 @@ int main(int argc, char** argv){
   ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
   tf::TransformBroadcaster odom_broadcaster;
   
+  //getting traction data subscribing to TractionData message
+  ros::Subscriber sub = n.subscribe("TractionData", 1000 );
+
+  //furbot specification
+  double r = 0.3; //wheel radius
+  double L = 0.6425; //distance between wheel and origin of robot frame
+  double pi = 3.1415926535;
+
+  
+  //v = 2πr × RPM × (60/1000) km/hr
+
   double x = 0.0;
   double y = 0.0;
   double th = 0.0;
@@ -17,9 +28,7 @@ int main(int argc, char** argv){
   double vy = -0.1;
   double vth = 0.1;
 
-  double r = 0.3; //wheel radius
-  double L = 0.6425; //distance between wheel and origin of robot frame
-
+  
 //assuming furbot works in rad for angles
 
   ros::Time current_time, last_time;
@@ -32,21 +41,34 @@ int main(int argc, char** argv){
     ros::spinOnce();               // check for incoming messages
     current_time = ros::Time::now();
 
+    /*
     //compute odometry in a typical way given the velocities of the robot
     double dt = (current_time - last_time).toSec();
     double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
     double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
     double delta_th = vth * dt;
+    */
 
-	//furbot [v, w] computation
-	double v = th * r; //phi1*r/2 + phi2*r/2
-	double w = th * r / L;
+    //converting rear speeds in linear velocities (from RPM to m/s)
+    // m/s = 60*RPM/(4*pi^2*r)
+    double vel_r_lin = (60*sub.vel_r)/(4*pi*pi*r);
+    double vel_l_lin = (60*sub.vel_l)/(4*pi*pi*r);
 
-	//furbot odometry equations
-	double dt = (current_time - last_time).toSec();
-	double x_new = x + v*dt*cos(th);
-	double y_new = y + v*dt*sin(th);
-	double th_new = th + w*dt;
+    //compute v and w using matlab formulas (challenge emaro days)
+    double v = (vel_r_lin + vel_l_lin)/2;
+    double w = (vel_l_lin - vel_r_lin)/L;
+
+    /*
+    //furbot [v, w] computation
+    double v = th * r; //phi1*r/2 + phi2*r/2
+    double w = th * r / L;
+    */
+
+    //furbot odometry equations
+    double dt = (current_time - last_time).toSec();
+    double x_new = x + v*dt*cos(th);
+    double y_new = y + v*dt*sin(th);
+    double th_new = th + w*dt;
 
     x = x_new;
     y = y_new;
