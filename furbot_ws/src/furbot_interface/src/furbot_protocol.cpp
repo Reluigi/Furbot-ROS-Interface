@@ -94,7 +94,7 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
     }
     // grab timer value and check
 
-    // grab system count value and check
+    // grab systems count value and check
 
     // go through frame parsing status for each system by it's ID and checking
     int position = 12;
