@@ -34,7 +34,7 @@ int main()
 //    send(sock, msg2, sizeof(msg2), 0);
 
     timespec waittime;
-    long int period_ = 100000000;
+    long int period_ = 500000000;
     waittime.tv_sec = period_/1000000000; /* seconds */
     waittime.tv_nsec = period_%1000000000; /* nanoseconds */
 
@@ -45,7 +45,7 @@ int main()
     next_arrival_time_.tv_sec = now.tv_sec + periods_micro/1000000;
     next_arrival_time_.tv_usec = now.tv_usec + periods_micro%1000000;
 
-    for (int i = 0; i < 100; i++){
+    for (int i = 0; i < 10; i++){
         /*
          *  USING STRING TO COMBINE UDP MSG
          */
@@ -75,23 +75,52 @@ int main()
         status.append((const char *) &padd, sizeof(uint8_t));
 
         // BMS data
-        uint8_t sid_bms = 1;
-        status.append((const char *) &sid_bms, sizeof(uint8_t));
-        uint8_t bms_state = 2; // running
-        status.append((const char *) &bms_state, sizeof(uint8_t));
-        uint8_t bms_charge = 200;
-        status.append((const char *) &bms_charge, sizeof(uint8_t));
-        uint16_t bms_current = 1234;
-        uint16_t bms_current_net = htons(bms_current);
-        status.append((const char *) &bms_current_net, sizeof(uint16_t));
-        uint16_t bms_voltage = 2345;
-        uint16_t bms_voltage_net = htons(bms_voltage);
-        status.append((const char *) &bms_voltage_net, sizeof(uint16_t));
-        uint8_t bms_temp_h = 40;
-        status.append((const char *) &bms_temp_h, sizeof(uint8_t));
-        uint8_t bms_temp_l = 60;
-        status.append((const char *) &bms_temp_l, sizeof(uint8_t));
+//        uint8_t sid_bms = 1;
+//        status.append((const char *) &sid_bms, sizeof(uint8_t));
+//        uint8_t bms_state = 2; // running
+//        status.append((const char *) &bms_state, sizeof(uint8_t));
+//        uint8_t bms_charge = 200;
+//        status.append((const char *) &bms_charge, sizeof(uint8_t));
+//        uint16_t bms_current = 1234;
+//        uint16_t bms_current_net = htons(bms_current);
+//        status.append((const char *) &bms_current_net, sizeof(uint16_t));
+//        uint16_t bms_voltage = 2345;
+//        uint16_t bms_voltage_net = htons(bms_voltage);
+//        status.append((const char *) &bms_voltage_net, sizeof(uint16_t));
+//        uint8_t bms_temp_h = 40;
+//        status.append((const char *) &bms_temp_h, sizeof(uint8_t));
+//        uint8_t bms_temp_l = 60;
+//        status.append((const char *) &bms_temp_l, sizeof(uint8_t));
 
+        // Traction data
+        char sid_td = 3;
+        status.append((const char *) &sid_td, sizeof(char));
+        char len_td = 17;
+        status.append((const char *) &len_td, sizeof(char));
+        char td_state = 2; // running
+        status.append((const char *) &td_state, sizeof(char));
+        char td_mode = 1;
+        status.append((const char *) &td_mode, sizeof(char));
+        int16_t td_speed = 24;
+        int16_t td_speed_net = htons(td_speed);
+        status.append((const char *) &td_speed_net, sizeof(int16_t));
+        int16_t td_vel_l = 4;
+        int16_t td_vel_l_net = htons(td_vel_l);
+        status.append((const char *) &td_vel_l_net, sizeof(int16_t));
+        int16_t td_vel_r = 4;
+        int16_t td_vel_r_net = htons(td_vel_r);
+        status.append((const char *) &td_vel_r_net, sizeof(int16_t));
+        int16_t td_throttle = 35;
+        int16_t td_throttle_net = htons(td_throttle);
+        status.append((const char *) &td_throttle_net, sizeof(int16_t));
+        int16_t td_brake = 0;
+        int16_t td_brake_net = htons(td_brake);
+        status.append((const char *) &td_brake_net, sizeof(int16_t));
+        char td_rev_flag = 0;
+        status.append((const char *) &td_rev_flag, sizeof(char));
+        int32_t td_odo = 0;
+        int32_t td_odo_net = htons(td_odo);
+        status.append((const char *) &td_odo_net, sizeof(int32_t));
 
 
         std::cout << "Resulting string: " << status << "; size = " << status.size() << "\n";

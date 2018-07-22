@@ -6,6 +6,9 @@
 #define FURBOT_PROTOCOL_H
 
 #include <cstring> // std::memcpy(dest, src, len);
+#include <cstdint> // fixed size integer types
+#include <netinet/in.h> // ntohs(), ntohl(), htons(), htonl()
+#include <iostream>
 
 /**
  * Max possible bytes in status frame
@@ -13,25 +16,15 @@
 #define STATUS_FRAME_BUFFER_SIZE 256
 
 /**
- * First 4 bytes of status frame.
- */
-char STATUS_MAGIC_WORD[4] = {0x41, 0x54, 0x53, 0x46};
-
-/**
- * First 4 bytes of remote frame.
- */
-char REMOTE_MAGIC_WORD[4] = {0x46, 0x53, 0x54, 0x41};
-
-/**
  * IDs of the system in UDP Status Frame.
  */
-enum class SystemID : unsigned
+enum class SystemID: char
 {
     COMM = 0,
     BMS = 1,
     MOTION_CONTROL = 2,
     TRACTION = 3,
-    SREERING = 4,
+    STEERING = 4,
     HYDRAULICS = 5,
     SUSP_RL = 6,
     SUSP_RR = 7,
@@ -44,13 +37,13 @@ enum class SystemID : unsigned
 /**
  * Lengths of different systems' messages.
  */
-enum class SystemMsgsLen : unsigned
+enum class SystemMsgsLen: int
 {
     COMM = 1, // no description
     BMS = 8,
     MOTION_CONTROL = 7,
     TRACTION = 17,
-    SREERING = 5,
+    STEERING = 5,
     HYDRAULICS = 8,
     SUSPENSION = 7,
     FORK = 11
@@ -59,7 +52,7 @@ enum class SystemMsgsLen : unsigned
 /**
  * System states.
  */
-enum class SystemState : unsigned
+enum class SystemState: int
 {
     COLD = 0,
     INIT = 1,
@@ -70,7 +63,7 @@ enum class SystemState : unsigned
 /**
  * Hydraulics drive states.
  */
-enum class HydrState : unsigned
+enum class HydrState: int
 {
     NO_OP = 0,
     ENABLE_MOT = 1,
@@ -87,7 +80,7 @@ enum class HydrState : unsigned
 /*
  * Suspension States.
  */
-enum class SuspState : unsigned
+enum class SuspState: int
 {
     INIT = 0,
     STOPPED = 1,
@@ -98,7 +91,7 @@ enum class SuspState : unsigned
 /**
  * Fork States.
  */
-enum class ForkState : unsigned
+enum class ForkState: int
 {
     UNKNOWN = 0,
     STOPPED = 1,
@@ -109,7 +102,7 @@ enum class ForkState : unsigned
 /**
  * States of Fork Sensor.
  */
-enum class ForkSensor : unsigned
+enum class ForkSensor: int
 {
     FWD = 0,
     CENT = 1,
@@ -134,13 +127,13 @@ enum class ForkSensor : unsigned
 struct TractionStruct {
     char state;
     char mode;
-    int speed;
-    int vel_l;
-    int vel_r;
-    int throttle;
-    int brake;
+    int16_t speed;
+    int16_t vel_l;
+    int16_t vel_r;
+    int16_t throttle;
+    int16_t brake;
     char reverse_flag;
-    int odo_travel;
+    int32_t odo_travel;
 };
 
 /**
@@ -149,8 +142,8 @@ struct TractionStruct {
  */
 struct SteeringStruct {
     char state;
-    int current_angle;
-    int target_angle;
+    int16_t current_angle;
+    int16_t target_angle;
 };
 
 /**
@@ -158,6 +151,8 @@ struct SteeringStruct {
  * @brief Structure to combine all systems' data.
  */
 struct StatusStruct {
+    int32_t timestamp;
+    char systems_count;
     TractionStruct * traction_part;
     SteeringStruct * steering_part;
 };
@@ -169,7 +164,7 @@ struct StatusStruct {
  * @param [in] bms_struct Pointer to structure, which should be filled with status values.
  * @return [out] int value, 0 if there were no errors, 1 in other case.
  */
-int ParseBmsStatus(char * bms_msg, void * bms_struct){}
+int ParseBmsStatus(char * bms_msg, void * bms_struct);
 
 /**
  * Motion Control (MC) data status parser.
@@ -178,7 +173,7 @@ int ParseBmsStatus(char * bms_msg, void * bms_struct){}
  * @param mc_struct Pointer to structure, which should be filled with status values.
  * @return int value, 0 if there were no errors, 1 in other case.
  */
-int ParseMcStatus(char * mc_msg, void * mc_struct){}
+int ParseMcStatus(char * mc_msg, void * mc_struct);
 
 /**
  * Traction Data (TD) status parser.
@@ -187,7 +182,7 @@ int ParseMcStatus(char * mc_msg, void * mc_struct){}
  * @param td_struct Pointer to structure, which should be filled with status values.
  * @return int value, 0 if there were no errors, 1 in other case.
  */
-int ParseTractStatus(char * td_msg, void * td_struct){}
+int ParseTractStatus(char * td_msg, TractionStruct * td_struct);
 
 /**
  * Steering Data (SD) status parser.
@@ -196,7 +191,7 @@ int ParseTractStatus(char * td_msg, void * td_struct){}
  * @param sd_struct Pointer to structure, which should be filled with status values.
  * @return int value, 0 if there were no errors, 1 in other case.
  */
-int ParseSteerStatus(char * sd_msg, void * sd_struct){}
+int ParseSteerStatus(char * sd_msg, SteeringStruct * sd_struct);
 
 // TODO: declare function for other systems statuses parsing.
 
@@ -207,6 +202,6 @@ int ParseSteerStatus(char * sd_msg, void * sd_struct){}
  * @param frame_size Size of the Status Frame.
  * @return int value, 0 if there were no errors, 1 in other case.
  */
-int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){}
+int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status);
 
 #endif //FURBOT_PROTOCOL_H
