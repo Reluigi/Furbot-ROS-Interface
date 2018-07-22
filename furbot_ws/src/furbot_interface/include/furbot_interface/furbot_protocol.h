@@ -151,6 +151,8 @@ struct SteeringStruct {
  * @brief Structure to combine all systems' data.
  */
 struct StatusStruct {
+    int32_t timestamp;
+    char systems_count;
     TractionStruct * traction_part;
     SteeringStruct * steering_part;
 };
