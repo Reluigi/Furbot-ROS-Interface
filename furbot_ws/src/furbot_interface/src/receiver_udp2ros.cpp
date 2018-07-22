@@ -13,7 +13,7 @@
 #include <sys/time.h>
 #include <iostream>
 #include <pthread.h>
-#include <ros/ros.h>
+#include "ros/ros.h"
 
 // Port number and IP address
 int port = 0x4653;
@@ -32,7 +32,7 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "furbot_udp2ros");
     ros::NodeHandle nh;
     ros::Rate loop_rate(pub_freq);
-    ros::Publisher chatter_pub = n.advertise<furbot_msgs::TractionData>("~traction_data", 10);
+    ros::Publisher chatter_pub = nh.advertise<furbot_msgs::TractionData>("~traction_data", 10);
 
     // Thread
     pthread_t udp_th;
@@ -58,6 +58,7 @@ int main(int argc, char **argv){
 
 //    UdpThread();
     while(true){
+        furbot_msgs::TractionData traction_msg;
         pthread_mutex_lock( &status_mutex );
 
         pthread_mutex_unlock( &status_mutex );
