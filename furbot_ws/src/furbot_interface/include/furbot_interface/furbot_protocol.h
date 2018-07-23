@@ -9,6 +9,10 @@
 #include <cstdint> // fixed size integer types
 #include <netinet/in.h> // ntohs(), ntohl(), htons(), htonl()
 #include <iostream>
+#include <string>
+#include <unistd.h>
+#include <sys/time.h>
+
 
 /**
  * Max possible bytes in status frame
@@ -203,5 +207,13 @@ int ParseSteerStatus(char * sd_msg, SteeringStruct * sd_struct);
  * @return int value, 0 if there were no errors, 1 in other case.
  */
 int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status);
+
+/**
+ * Put magic word and timestamp int the beginning of the remote frame.
+ *
+ * @param remote_frame Pointer to string of remote frame.
+ * @return int value, 0 if there were no errors, 1 in other case.
+ */
+int StampRemoteFrame(std::string* remote_frame);
 
 #endif //FURBOT_PROTOCOL_H
