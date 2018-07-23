@@ -16,8 +16,6 @@
 int port = 0x4653;
 unsigned long int address = INADDR_ANY;
 
-// ROS params
-int pub_freq = 100; //Hz
 
 void * UdpThread(void *arg);
 
@@ -25,11 +23,15 @@ pthread_mutex_t status_mutex  = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char **argv){
 
+    // ROS params
+    int pub_freq = 100; //Hz
+    std::string traction_topic = "furbot/traction_data";
+
     // ROS
     ros::init(argc, argv, "furbot_udp2ros");
     ros::NodeHandle nh;
     ros::Rate loop_rate(pub_freq);
-    ros::Publisher traction_pub = nh.advertise<furbot_msgs::TractionData>("furbot/traction_data", 10);
+    ros::Publisher traction_pub = nh.advertise<furbot_msgs::TractionData>(traction_topic, 10);
 
     // Thread
     pthread_t udp_th;
@@ -52,6 +54,8 @@ int main(int argc, char **argv){
         std::perror("pthread_detach error");
         std::exit(1);
     }
+
+    sleep(1);
 
     int count = 0;
     while(ros::ok()){
