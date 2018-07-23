@@ -34,7 +34,9 @@ int main()
 //    send(sock, msg2, sizeof(msg2), 0);
 
     timespec waittime;
-    long int period_ = 500000000;
+    int freq = 100; //Hz
+    int period_msec = 1000 / freq; // Period in msec
+    long int period_ = period_sec*1000000; // Period in nanosec
     waittime.tv_sec = period_/1000000000; /* seconds */
     waittime.tv_nsec = period_%1000000000; /* nanoseconds */
 

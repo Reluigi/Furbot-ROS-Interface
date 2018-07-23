@@ -1,4 +1,4 @@
-/* This node subscribes to control signals' topic port,
+/* This node subscribes to control signals' topic,
  * packs data in UDP frame and sends it to Furbot.
  */
 
@@ -9,9 +9,6 @@
 #include <netinet/in.h>
 #include <cstdint>
 #include <cstdlib>
-#include <unistd.h>
-#include <iostream>
-#include <string>
 #include "ros/ros.h"
 
 class SubWithSocket{
@@ -47,23 +44,23 @@ SubWithSocket::~SubWithSocket() {
 
 void SubWithSocket::SubCallback(const furbot_msgs::ControlSignals::ConstPtr &msg) {
     std::string remote_frame;
+    StampRemoteFrame(&remote_frame);
 
-    // Combine msg starting with magic word
-    // TODO: make function in furbot_protocol.h to fill first 2 fields
-//    remote_frame.append(magic, sizeof(char)*4);
+    int32_t steer =  msg->steer;
+    int32_t throttle =  msg->throttle;
+    uint32_t brake =  msg->brake;
 
-    // Timestamp
-    timeval now;
-    gettimeofday(&now, NULL);
-    uint32_t timestamp = (now.tv_sec - 1531000000) * 1000 + now.tv_usec/1000;
-    uint32_t timestamp_net = htonl(timestamp);
-    remote_frame.append((const char *) &timestamp_net, sizeof(uint32_t));
+    remote_frame.append((const char *) &steer, sizeof(int32_t));
+    remote_frame.append((const char *) &throttle, sizeof(int32_t));
+    remote_frame.append((const char *) &brake, sizeof(uint32_t));
+
+    sendto(sock, &remote_frame[0], remote_frame.size(), 0, (struct sockaddr *)&addr, sizeof(addr));
 }
 
 int main (int argc, char** argv){
     ros::init(argc, argv, "furbot_ros2udp");
     ros::NodeHandle nh;
-    std::string topic = "control_signals";
+    std::string topic = "furbot/control_signals";
 
     int port = 0x4654;
     unsigned long int address = INADDR_LOOPBACK;

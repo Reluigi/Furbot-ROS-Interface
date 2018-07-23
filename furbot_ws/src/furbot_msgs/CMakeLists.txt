@@ -52,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
    FILES
    TractionData.msg
    SteeringData.msg
+   ControlSignals.msg
   )
 
 ## Generate services in the 'srv' folder
