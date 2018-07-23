@@ -59,8 +59,11 @@ int main(int argc, char **argv){
     int count = 0;
     while(ros::ok()){
         furbot_msgs::TractionData traction_msg;
+
         pthread_mutex_lock( &status_mutex );
 
+        // TODO: fill the header
+//        traction_msg.header.stamp =
         traction_msg.state = status.traction_part->state;
         traction_msg.mode = status.traction_part->mode;
         traction_msg.speed = status.traction_part->speed;
@@ -70,6 +73,8 @@ int main(int argc, char **argv){
         traction_msg.brake = status.traction_part->brake;
         traction_msg.reverse_flag = status.traction_part->reverse_flag;
         traction_msg.odo_travel = status.traction_part->odo_travel;
+
+        // TODO: steering data
 
         pthread_mutex_unlock( &status_mutex );
 
