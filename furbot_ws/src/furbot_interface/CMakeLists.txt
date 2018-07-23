@@ -38,6 +38,10 @@ if(CMAKE_THREAD_LIBS_INIT)
     target_link_libraries(receiver_udp2ros_node "${CMAKE_THREAD_LIBS_INIT}")
 endif()
 
+add_executable(sender_ros2udp_node src/sender_ros2udp.cpp src/furbot_protocol.cpp)
+target_link_libraries(sender_ros2udp_node ${catkin_LIBRARIES})
+add_dependencies(sender_ros2udp_node ${catkin_EXPORTED_TARGETS})
+
 
 #add_executable(furbot_odometry_node src/furbot_odometry.cpp)
 #target_link_libraries(furbot_odometry_node ${catkin_LIBRARIES})
