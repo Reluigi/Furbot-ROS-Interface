@@ -1,5 +1,4 @@
 #ROS stuff
-
 furbot_ws/build/
 furbot_ws/devel/
 furbot_ws/logs/
@@ -8,3 +7,13 @@ furbot_ws/.catkin_tools/
 #IDE stuff
 furbot_ws/.idea/
 cmake-build-debug/
+
+#Cmake stuff
+CMakeFiles/
+Makefile
+cmake_install.cmake
+CMakeCache.txt
+
+#Compiled stuff for testing
+remote_receiver
+status_sender

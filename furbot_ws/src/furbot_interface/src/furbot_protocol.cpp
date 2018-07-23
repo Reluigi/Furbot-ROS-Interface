@@ -140,3 +140,18 @@ int ParseStatusFrame(char * frame, int frame_size, StatusStruct * status){
     }
     return 0;
 }
+
+int StampRemoteFrame(std::string* remote_frame){
+
+    // Combine msg starting with magic word
+    remote_frame->append(REMOTE_MAGIC_WORD, sizeof(char)*4);
+
+    // Timestamp
+    timeval now;
+    gettimeofday(&now, NULL);
+    uint32_t timestamp = (now.tv_sec - 1531000000) * 1000 + now.tv_usec/1000;
+    uint32_t timestamp_net = htonl(timestamp);
+    remote_frame->append((const char *) &timestamp_net, sizeof(uint32_t));
+
+    return 0;
+}

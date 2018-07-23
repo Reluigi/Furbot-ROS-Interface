@@ -7,11 +7,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <cstdint> // uint8_t
+#include <cstdint>
 #include <cstdlib>
-#include <unistd.h>
-#include <sys/time.h>
-#include <iostream>
 #include <pthread.h>
 #include "ros/ros.h"
 
@@ -19,8 +16,6 @@
 int port = 0x4653;
 unsigned long int address = INADDR_ANY;
 
-// ROS params
-int pub_freq = 100; //Hz
 
 void * UdpThread(void *arg);
 
@@ -28,11 +23,15 @@ pthread_mutex_t status_mutex  = PTHREAD_MUTEX_INITIALIZER;
 
 int main(int argc, char **argv){
 
+    // ROS params
+    int pub_freq = 100; //Hz
+    std::string traction_topic = "furbot/traction_data";
+
     // ROS
     ros::init(argc, argv, "furbot_udp2ros");
     ros::NodeHandle nh;
     ros::Rate loop_rate(pub_freq);
-    ros::Publisher chatter_pub = nh.advertise<furbot_msgs::TractionData>("~traction_data", 10);
+    ros::Publisher traction_pub = nh.advertise<furbot_msgs::TractionData>(traction_topic, 10);
 
     // Thread
     pthread_t udp_th;
@@ -56,12 +55,34 @@ int main(int argc, char **argv){
         std::exit(1);
     }
 
-//    UdpThread();
-    while(true){
+    sleep(1);
+
+    int count = 0;
+    while(ros::ok()){
         furbot_msgs::TractionData traction_msg;
+
         pthread_mutex_lock( &status_mutex );
 
+        // TODO: fill the header
+//        traction_msg.header.stamp =
+        traction_msg.state = status.traction_part->state;
+        traction_msg.mode = status.traction_part->mode;
+        traction_msg.speed = status.traction_part->speed;
+        traction_msg.vel_l = status.traction_part->vel_l;
+        traction_msg.vel_r = status.traction_part->vel_r;
+        traction_msg.throttle = status.traction_part->throttle;
+        traction_msg.brake = status.traction_part->brake;
+        traction_msg.reverse_flag = status.traction_part->reverse_flag;
+        traction_msg.odo_travel = status.traction_part->odo_travel;
+
+        // TODO: steering data
+
         pthread_mutex_unlock( &status_mutex );
+
+        traction_pub.publish(traction_msg);
+
+        count++;
+        loop_rate.sleep();
     }
     return 0;
 }
@@ -94,9 +115,6 @@ void * UdpThread(void *arg){
     while (not fail){
         char buf[STATUS_FRAME_BUFFER_SIZE];
         bytes_read = recvfrom(sock, buf, STATUS_FRAME_BUFFER_SIZE, 0, NULL, NULL);
-//        buf[bytes_read] = '\0';
-//        std::cout << "Bytes read = " << bytes_read << ", message: " << buf << std::endl;
-        std::cout << "12th byte: " << (int)buf[12] << "\n";
         pthread_mutex_lock( &status_mutex );
         if (ParseStatusFrame(buf, bytes_read, status)){
             std::cout << "Parsing error\n";
