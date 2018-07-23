@@ -20,7 +20,7 @@ int main() {
     }
 
     addr.sin_family = AF_INET;
-    addr.sin_port = htons(0x4653);
+    addr.sin_port = htons(0x4654);
     addr.sin_addr.s_addr = htonl(INADDR_ANY); // specify to listen on all IP addresses
     if(bind(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) // explicitly bind socket with particular address
     {
