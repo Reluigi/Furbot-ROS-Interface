@@ -5,6 +5,7 @@ project(furbot_interface)
 add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
+  tf
   roscpp
   std_msgs
   geometry_msgs
@@ -42,8 +43,9 @@ add_executable(sender_ros2udp_node src/sender_ros2udp.cpp src/furbot_protocol.cp
 target_link_libraries(sender_ros2udp_node ${catkin_LIBRARIES})
 add_dependencies(sender_ros2udp_node ${catkin_EXPORTED_TARGETS})
 
-#add_executable(furbot_odometry_node src/furbot_odometry.cpp)
-#target_link_libraries(furbot_odometry_node ${catkin_LIBRARIES})
+add_executable(furbot_odometry_node src/furbot_odometry.cpp)
+target_link_libraries(furbot_odometry_node ${catkin_LIBRARIES})
+add_dependencies(furbot_odometry_node ${catkin_EXPORTED_TARGETS})
 
 add_executable(twist2control_node src/twist2control.cpp)
 target_link_libraries(twist2control_node ${catkin_LIBRARIES})
