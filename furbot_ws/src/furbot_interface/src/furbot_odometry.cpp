@@ -1,6 +1,13 @@
 #include <ros/ros.h>
 #include <tf/transform_broadcaster.h>
 #include <nav_msgs/Odometry.h>
+#include "std_msgs/String.h"
+
+
+void chatterCallback(const std_msgs::String::ConstPtr& msg)
+{
+  ROS_INFO("I heard: [%s]", msg->data.c_str());
+}
 
 int main(int argc, char** argv){
   ros::init(argc, argv, "odometry_publisher");
@@ -10,10 +17,10 @@ int main(int argc, char** argv){
   tf::TransformBroadcaster odom_broadcaster;
   
   //getting traction data subscribing to TractionData message
-  ros::Subscriber sub = n.subscribe("TractionData", 1000 );
+  ros::Subscriber sub = n.subscribe("TractionData", 1000, chatterCallback);
 
   //furbot specification
-  double r = 0.3; //wheel radius
+  double radius = 0.3; //wheel radius
   double L = 0.6425; //distance between wheel and origin of robot frame
   double pi = 3.1415926535;
 
@@ -51,8 +58,8 @@ int main(int argc, char** argv){
 
     //converting rear speeds in linear velocities (from RPM to m/s)
     // m/s = 60*RPM/(4*pi^2*r)
-    double vel_r_lin = (60*sub.vel_r)/(4*pi*pi*r);
-    double vel_l_lin = (60*sub.vel_l)/(4*pi*pi*r);
+    double vel_r_lin = (60*sub.vel_r)/(4*pi*pi*radius);
+    double vel_l_lin = (60*sub.vel_l)/(4*pi*pi*radius);
 
     //compute v and w using matlab formulas (challenge emaro days)
     double v = (vel_r_lin + vel_l_lin)/2;

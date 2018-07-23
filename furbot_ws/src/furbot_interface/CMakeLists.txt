@@ -39,5 +39,5 @@ if(CMAKE_THREAD_LIBS_INIT)
 endif()
 
 
-#add_executable(furbot_odometry_node src/furbot_odometry.cpp)
-#target_link_libraries(furbot_odometry_node ${catkin_LIBRARIES})
+add_executable(furbot_odometry_node src/furbot_odometry.cpp)
+target_link_libraries(furbot_odometry_node ${catkin_LIBRARIES})
