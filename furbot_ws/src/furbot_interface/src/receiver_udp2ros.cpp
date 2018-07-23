@@ -7,11 +7,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <cstdint> // uint8_t
+#include <cstdint>
 #include <cstdlib>
-#include <unistd.h>
-#include <sys/time.h>
-#include <iostream>
 #include <pthread.h>
 #include "ros/ros.h"
 
@@ -32,7 +29,7 @@ int main(int argc, char **argv){
     ros::init(argc, argv, "furbot_udp2ros");
     ros::NodeHandle nh;
     ros::Rate loop_rate(pub_freq);
-    ros::Publisher traction_pub = nh.advertise<furbot_msgs::TractionData>("traction_data", 10);
+    ros::Publisher traction_pub = nh.advertise<furbot_msgs::TractionData>("furbot/traction_data", 10);
 
     // Thread
     pthread_t udp_th;
