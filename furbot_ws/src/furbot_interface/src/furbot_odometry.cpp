@@ -74,7 +74,7 @@ int main(int argc, char** argv){
 
 	//compute v and w using matlab formulas (challenge emaro days)
 	double v = (vel_r_lin + vel_l_lin)/2;
-	double w = (vel_l_lin - vel_r_lin)/L;
+	double w = (vel_l_lin - vel_r_lin)/2*L;
 
     /*
     //furbot [v, w] computation
@@ -84,13 +84,17 @@ int main(int argc, char** argv){
 
     //furbot odometry equations
     double dt = (current_time - last_time).toSec();
-    double x_new = x + v*dt*cos(th);
-    double y_new = y + v*dt*sin(th);
-    double th_new = th + w*dt;
+    double x_new = v*dt*sin(th);
+    double y_new = v*dt*cos(th);
+    double th_new = w*dt;
 
     x = x_new;
     y = y_new;
     th = th_new;
+
+    vx = x /dt;
+    vy = y /dt;
+    vth = th/dt;
 
     //since all odometry is 6DOF we'll need a quaternion created from yaw
     geometry_msgs::Quaternion odom_quat = tf::createQuaternionMsgFromYaw(th);
