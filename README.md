@@ -3,7 +3,7 @@
 Furbot is a vehicle made in University of Genova. It is designed to be manually controlled by an operator, but it has an interface to control it via special protocol. It will be more useful to make Furbot autonomous at some level.
 Our project is part of a platform project, this means that more than one group works to the same robot in order to make a coordinate work. Our main goal was to develop a ROS interface for Furbot vehicle, in order to make it able to be controllable via ROS.
 
-**A detailed report of the project is available in** `report.pdf`.
+**A detailed description of the project is available in** `report.pdf`.
 
 ## Team
 - Ruslan Aminev
