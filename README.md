@@ -5,6 +5,10 @@ Our project is part of a platform project, this means that more than one group w
 
 **A detailed report of the project is available in** `report.pdf`.
 
+## Team
+- Ruslan Aminev
+- Luigi Secondo
+
 ## Description of architecture
 Overall organisation and reasons.
 
