@@ -17,3 +17,7 @@ CMakeCache.txt
 #Compiled stuff for testing
 remote_receiver
 status_sender
+
+
+#MacOs related files
+.DS_Store
